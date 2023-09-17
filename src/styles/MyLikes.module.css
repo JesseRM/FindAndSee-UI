@@ -1,0 +1,26 @@
+.header {
+  padding: 2rem;
+}
+
+.liked-finds-container {
+  display: flex;
+  gap: var(--gap, 1.3rem);
+  flex-direction: column;
+  margin: 1.5rem 0;
+  justify-content: center;
+  align-items: center;
+}
+
+
+@media (min-width: 768px) {
+  .liked-finds-container {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+@media (min-width: 1024px) {
+  .liked-finds-container {
+    --gap: 0.9rem;
+  }
+}
