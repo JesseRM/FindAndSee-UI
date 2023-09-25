@@ -8,7 +8,7 @@ import {
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { msalConfig } from "@/authConfig";
+import { msalConfig } from "../authConfig";
 import { MsalProvider } from "@azure/msal-react";
 import Script from "next/script";
 import NavBar from "@/components/NavBar";
