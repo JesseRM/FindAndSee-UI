@@ -3,9 +3,31 @@
 import SearchBar from "@/components/SearchBar";
 import styles from "../styles/Home.module.css";
 import Find from "@/components/Find";
+import { useEffect, useState } from "react";
+import FindBasic from "@/interfaces/FindBasic";
+import axios from "axios";
 
 export default function Home() {
-  const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const [recentFinds, setRecentFinds] = useState<FindBasic[]>([]);
+  const getRecentFindsUrl = process.env.NEXT_PUBLIC_API + "/finds/recent";
+
+  useEffect(() => {
+    fetchRecentFinds();
+  }, []);
+
+  function fetchRecentFinds() {
+    axios
+      .get(getRecentFindsUrl)
+      .then((response) => {
+        console.log(response.data);
+        setRecentFinds(response.data);
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response.status);
+        }
+      });
+  }
 
   return (
     <main>
@@ -19,10 +41,10 @@ export default function Home() {
       </div>
       <div>
         <SearchBar />
+        <h2 className="my-5 px-5">Recent finds</h2>
         <div className={styles["finds-container"]}>
-          {arr.map((val) => (
-            <Find key={val} />
-          ))}
+          {recentFinds.length > 0 &&
+            recentFinds.map((find, index) => <Find key={index} find={find} />)}
         </div>
       </div>
     </main>
