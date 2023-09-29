@@ -1,10 +1,13 @@
-.find-title {
-  margin: 1rem 0;
-  font-size: 1.4rem;
-  padding-left: 1rem;
+.heading-container {
+  padding: 0 1.8rem;
 }
 
-.find-image-container {
+.title {
+  margin: 1rem 0;
+  font-size: 1.4rem;
+}
+
+.image-container {
   display: flex;
   justify-content: center;
   width: 100%;
@@ -12,7 +15,7 @@
   margin: 2rem 0;
 }
 
-.find-image {
+.image {
   width: 90%;
   padding: 0;
   margin: 0;
@@ -21,32 +24,40 @@
   object-fit: cover;
 }
 
-.find-body-container {
-  padding: 0 1rem;
+.body-container {
+  padding: 0 1.8rem;
+}
+
+.date-container {
+  font-size: 0.8rem;
 }
 
 @media (min-width: 768px) {
-  .find-image-container {
+  .heading-container {
+    padding-left: 2.5rem;
+  }
+
+  .image-container {
     height: 26rem;
   }
 }
 
 @media (min-width: 1024px) {
-  .find-image-container {
+  .image-container {
     width: 70%;
     height: 30rem;
     margin: 3rem auto;
   }
 
-  .find-title {
-    padding-left: 8rem;
+  .heading-container {
+    padding: 0 15rem;
   }
 
-  .find-body-container {
-    padding: 0 8rem;
+  .body-container {
+    padding: 0 15rem;
   }
 
-  .find-image {
+  .image {
     object-fit: contain;
   }
 }
