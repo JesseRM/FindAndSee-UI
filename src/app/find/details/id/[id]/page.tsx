@@ -1,61 +1,93 @@
+"use client";
+
 import Link from "next/link";
 import { BiLinkExternal } from "react-icons/bi";
 import styles from "@/styles/FindDetails.module.css";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import FindDetails from "@/interfaces/FindDetails";
+import { create } from "domain";
 
-const FindDetails = () => {
-  const find = {
-    title: "Beautiful forest",
-    imageUrl: "https://i.imgur.com/8W5XPMe.jpeg",
-    authorUsername: "John_Doe",
-    longitude: 24.0023,
-    latitude: -32.2323,
-    date_created: "2023-09-01",
-    googleMapsUrl:
-      "https://www.google.com/maps/search/?api=1&query=-32.2323,24.0023",
-    description:
-      "Found this amazing spot one day while doing a jog. If you want a nice peaceful place check it out.",
+const FindDetails = ({ params }: { params: { id: string } }) => {
+  const [findDetails, setFindDetails] = useState<FindDetails | null>(null);
+  const [googleMapsUrl, setGoogleMapsUrl] = useState("");
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
   };
 
-  const userPageUrl = "/user/32r23r322234";
+  useEffect(() => {
+    fetchFindDetails(params.id);
+  }, [params.id]);
+
+  function fetchFindDetails(findId: string) {
+    const apiUrl = process.env.NEXT_PUBLIC_API + "/finds/id/" + findId;
+
+    axios.get(apiUrl).then((response) => {
+      setFindDetails(response.data);
+    });
+  }
+
+  function createGoogleMapsLink(longitude: number, latitude: number) {
+    return `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
+  }
 
   return (
     <>
-      <div className={styles["header"]}>
-        <h1 className={styles["find-title"]}>{find.title}</h1>
-        <div>
-          <Link style={{ textDecoration: "none" }} href={userPageUrl}>
-            {find.authorUsername}
-          </Link>
-        </div>
-        <div>{find.date_created}</div>
-      </div>
+      {findDetails && (
+        <>
+          <div className={styles["heading-container"]}>
+            <h1 className={styles["title"]}>{findDetails.title}</h1>
+            <div className={styles["display-name-container"]}>
+              <Link
+                style={{ textDecoration: "none" }}
+                href={"/user/" + findDetails.displayName}
+              >
+                {findDetails.displayName}
+              </Link>
+            </div>
+            <div className={styles["date-container"]}>
+              {new Date(findDetails.dateCreated).toLocaleDateString(
+                "en-US",
+                dateOptions,
+              )}
+            </div>
+          </div>
 
-      <div className={styles["find-image-container"]}>
-        <img
-          className={styles["find-image"]}
-          src={find.imageUrl}
-          alt="Find image"
-        />
-      </div>
-      <div className={styles["find-body-container"]}>
-        <p>
-          <b>Longitude: </b>
-          {find.longitude}
-        </p>
-        <p>
-          <b>Latitude: </b>
-          {find.latitude}
-        </p>
-        <p>
-          <b>Google Maps Link</b>{" "}
-          <Link href={find.googleMapsUrl}>
-            <BiLinkExternal />
-          </Link>
-        </p>
-        <br />
-        <h4>Description</h4>
-        <p>{find.description}</p>
-      </div>
+          <div className={styles["image-container"]}>
+            <img
+              className={styles["image"]}
+              src={findDetails.imageUrl}
+              alt="Find image"
+            />
+          </div>
+          <div className={styles["body-container"]}>
+            <p>
+              <b>Longitude: </b>
+              {findDetails.longitude}
+            </p>
+            <p>
+              <b>Latitude: </b>
+              {findDetails.latitude}
+            </p>
+            <p>
+              <b>Google Maps Link</b>{" "}
+              <Link
+                href={createGoogleMapsLink(
+                  findDetails.longitude,
+                  findDetails.latitude,
+                )}
+              >
+                <BiLinkExternal />
+              </Link>
+            </p>
+            <br />
+            <h4>Description</h4>
+            <p>{findDetails.description}</p>
+          </div>
+        </>
+      )}
     </>
   );
 };
