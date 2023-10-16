@@ -61,6 +61,11 @@ const MyFinds = () => {
         <div className={styles["my-finds-container"]}>
           {myFinds &&
             myFinds.map((find, index) => <Find key={index} find={find} />)}
+          {myFinds.length === 0 && (
+            <h3 className="text-center my-4">
+              You have not submitted any finds yet...
+            </h3>
+          )}
         </div>
       </AuthenticatedTemplate>
       <UnauthenticatedTemplate>

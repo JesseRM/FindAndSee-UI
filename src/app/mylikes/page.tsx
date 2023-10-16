@@ -63,6 +63,11 @@ const MyLikes = () => {
         <div className={styles["liked-finds-container"]}>
           {likedFinds &&
             likedFinds.map((find, index) => <Find key={index} find={find} />)}
+          {likedFinds.length === 0 && (
+            <h3 className="text-center my-4">
+              You have not liked any finds yet...
+            </h3>
+          )}
         </div>
       </AuthenticatedTemplate>
       <UnauthenticatedTemplate>
