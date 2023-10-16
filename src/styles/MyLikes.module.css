@@ -2,6 +2,13 @@
   padding: 2rem;
 }
 
+.unauthenticated-container {
+  width: 80%;
+  margin: 0 auto;
+  border: 2px solid black;
+
+}
+
 .liked-finds-container {
   display: flex;
   gap: var(--gap, 1.3rem);
