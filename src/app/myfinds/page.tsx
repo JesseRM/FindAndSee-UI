@@ -45,7 +45,6 @@ const MyFinds = () => {
     const config = {
       headers: {
         Authorization: "Bearer " + accessToken,
-        "Access-Control-Allow-Origin": true,
       },
     };
 
