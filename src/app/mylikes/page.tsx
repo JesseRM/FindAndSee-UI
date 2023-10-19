@@ -3,7 +3,6 @@
 import Find from "@/components/Find";
 import FindBasic from "@/interfaces/FindBasic";
 import styles from "@/styles/MyLikes.module.css";
-import { InteractionStatus } from "@azure/msal-browser";
 import {
   AuthenticatedTemplate,
   UnauthenticatedTemplate,
@@ -11,59 +10,54 @@ import {
 } from "@azure/msal-react";
 import { loginRequest } from "authConfig";
 import axios from "axios";
-import { error } from "console";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import getAccessToken from "util/token";
 
 const MyLikes = () => {
   const { instance, accounts } = useMsal();
+  const [fetching, setFetching] = useState(true);
   const [likedFinds, setLikedFinds] = useState<FindBasic[]>([]);
 
-  useEffect(() => {
-    instance.initialize();
-
-    instance
-      .acquireTokenSilent({
-        scopes: [
-          "https://renewareauth.onmicrosoft.com/findandsee-api/finds.read",
-        ],
-        account: accounts[0],
-      })
-      .then((response) => {
-        if (response.accessToken) {
-          fetchLikedfinds(response.accessToken);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, [accounts, instance]);
-
-  function handleLoginRedirect() {
+  const handleLoginRedirect = () => {
     instance.loginRedirect(loginRequest).catch((error) => console.log(error));
-  }
+  };
 
-  function fetchLikedfinds(accessToken: string) {
+  const fetchLikedfinds = useCallback(async () => {
+    const accessToken = await getAccessToken(instance, accounts[0]);
     const url = process.env.NEXT_PUBLIC_API + "/finds/liked";
     const config = {
       headers: {
         Authorization: "Bearer " + accessToken,
-        "Access-Control-Allow-Origin": true,
       },
     };
 
     axios.get(url, config).then((response) => {
+      setFetching(false);
       setLikedFinds(response.data);
     });
-  }
+  }, [instance, accounts]);
+
+  useEffect(() => {
+    fetchLikedfinds();
+  }, [accounts, instance, fetchLikedfinds]);
 
   return (
     <div>
       <AuthenticatedTemplate>
         <h1 className={styles["header"]}>My Likes</h1>
         <div className={styles["liked-finds-container"]}>
+          {fetching && (
+            <div
+              className="spinner-border"
+              style={{ width: "3rem", height: "3rem" }}
+              role="status"
+            >
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          )}
           {likedFinds &&
             likedFinds.map((find, index) => <Find key={index} find={find} />)}
-          {likedFinds.length === 0 && (
+          {!fetching && likedFinds.length === 0 && (
             <h3 className="text-center my-4">
               You have not liked any finds yet...
             </h3>
