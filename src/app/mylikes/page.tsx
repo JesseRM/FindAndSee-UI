@@ -38,7 +38,13 @@ const MyLikes = () => {
   }, [instance, accounts]);
 
   useEffect(() => {
-    fetchLikedfinds();
+    try {
+      if (accounts[0]) {
+        fetchLikedfinds();
+      }
+    } catch {
+      alert("Something went wrong, try again.");
+    }
   }, [accounts, instance, fetchLikedfinds]);
 
   return (

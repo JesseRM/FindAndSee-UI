@@ -19,6 +19,9 @@ const getAccessToken = async (
       if (response.accessToken) {
         accessToken = response.accessToken;
       }
+    })
+    .catch(() => {
+      console.log("Could not acquire token");
     });
 
   return accessToken;

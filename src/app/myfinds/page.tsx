@@ -38,7 +38,13 @@ const MyFinds = () => {
   }, [instance, accounts]);
 
   useEffect(() => {
-    fetchMyfinds();
+    try {
+      if (accounts[0]) {
+        fetchMyfinds();
+      }
+    } catch {
+      alert("Something went wrong");
+    }
   }, [accounts, instance, fetchMyfinds]);
 
   return (
