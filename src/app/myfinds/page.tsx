@@ -10,37 +10,20 @@ import {
 } from "@azure/msal-react";
 import { loginRequest } from "authConfig";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import getAccessToken from "util/token";
 
 const MyFinds = () => {
   const { instance, accounts } = useMsal();
+  const [fetching, setFetching] = useState(true);
   const [myFinds, setMyFinds] = useState<FindBasic[]>([]);
 
-  useEffect(() => {
-    instance.initialize();
-
-    instance
-      .acquireTokenSilent({
-        scopes: [
-          "https://renewareauth.onmicrosoft.com/findandsee-api/finds.read",
-        ],
-        account: accounts[0],
-      })
-      .then((response) => {
-        if (response.accessToken) {
-          fetchMyfinds(response.accessToken);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, [accounts, instance]);
-
-  function handleLoginRedirect() {
+  const handleLoginRedirect = () => {
     instance.loginRedirect(loginRequest).catch((error) => console.log(error));
-  }
+  };
 
-  function fetchMyfinds(accessToken: string) {
+  const fetchMyfinds = useCallback(async () => {
+    const accessToken = await getAccessToken(instance, accounts[0]);
     const url = process.env.NEXT_PUBLIC_API + "/finds/user";
     const config = {
       headers: {
@@ -49,18 +32,32 @@ const MyFinds = () => {
     };
 
     axios.get(url, config).then((response) => {
+      setFetching(false);
       setMyFinds(response.data);
     });
-  }
+  }, [instance, accounts]);
+
+  useEffect(() => {
+    fetchMyfinds();
+  }, [accounts, instance, fetchMyfinds]);
 
   return (
     <div>
       <AuthenticatedTemplate>
         <h1 className={styles["header"]}>My Finds</h1>
         <div className={styles["my-finds-container"]}>
+          {fetching && (
+            <div
+              className="spinner-border"
+              style={{ width: "3rem", height: "3rem" }}
+              role="status"
+            >
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          )}
           {myFinds &&
             myFinds.map((find, index) => <Find key={index} find={find} />)}
-          {myFinds.length === 0 && (
+          {!fetching && myFinds.length === 0 && (
             <h3 className="text-center my-4">
               You have not submitted any finds yet...
             </h3>
