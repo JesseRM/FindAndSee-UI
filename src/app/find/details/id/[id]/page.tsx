@@ -2,89 +2,221 @@
 
 import Link from "next/link";
 import { BiLinkExternal } from "react-icons/bi";
+import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
+import { BsQuestionSquare } from "react-icons/bs";
 import styles from "@/styles/FindDetails.module.css";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import FindDetails from "@/interfaces/FindDetails";
-import { create } from "domain";
+import Find from "@/interfaces/Find";
+import getAccessToken from "util/token";
+import { useMsal } from "@azure/msal-react";
 
 const FindDetails = ({ params }: { params: { id: string } }) => {
-  const [findDetails, setFindDetails] = useState<FindDetails | null>(null);
-  const [googleMapsUrl, setGoogleMapsUrl] = useState("");
+  const { instance, accounts } = useMsal();
+  const [find, setFind] = useState<Find | null>(null);
+  const [liked, setLiked] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [notFound, setNotFound] = useState(false);
   const dateOptions: Intl.DateTimeFormatOptions = {
     month: "short",
     day: "numeric",
     year: "numeric",
   };
 
-  useEffect(() => {
-    fetchFindDetails(params.id);
-  }, [params.id]);
-
-  function fetchFindDetails(findId: string) {
+  const fetchFindDetails = (findId: string) => {
     const apiUrl = process.env.NEXT_PUBLIC_API + "/finds/id/" + findId;
 
-    axios.get(apiUrl).then((response) => {
-      setFindDetails(response.data);
-    });
-  }
+    axios
+      .get(apiUrl)
+      .then((response) => {
+        const find: Find = response.data;
+
+        setFind(find);
+        checkIfLiked(find.findId);
+      })
+      .catch((error) => {
+        const NOT_FOUND = 404;
+
+        if (error.response.status === NOT_FOUND) {
+          setNotFound(true);
+        } else {
+          alert("Something went wrong with your request");
+        }
+      });
+  };
+
+  const checkIfLiked = async (findId: string) => {
+    const accessToken = await getAccessToken(instance, accounts[0]);
+
+    if (accessToken) {
+      const apiUrl = process.env.NEXT_PUBLIC_API + "/likes/liked/" + findId;
+      const config = {
+        headers: {
+          Authorization: "Bearer " + accessToken,
+        },
+      };
+
+      axios
+        .get(apiUrl, config)
+        .then((response) => {
+          if (response.data === true) {
+            setLiked(true);
+          }
+        })
+        .catch((error) => {
+          if (error.response.status === 404) {
+            console.log("Not liked.");
+          } else {
+            console.log("Error processing request.");
+          }
+        });
+    }
+  };
+
+  const Like = async (findId: string) => {
+    const accessToken = await getAccessToken(instance, accounts[0]);
+
+    if (accessToken) {
+      const apiUrl = process.env.NEXT_PUBLIC_API + "/likes";
+      const body = {
+        findId,
+      };
+      const config = {
+        headers: {
+          Authorization: "Bearer " + accessToken,
+        },
+      };
+
+      setIsSubmitting(true);
+
+      await axios
+        .post(apiUrl, body, config)
+        .then((response) => {
+          setIsSubmitting(false);
+          setLiked(true);
+        })
+        .catch((error) => {
+          setIsSubmitting(false);
+          alert("Oops, something went wrong");
+        });
+    }
+  };
+
+  const UnLike = async (findId: string) => {
+    const accessToken = await getAccessToken(instance, accounts[0]);
+
+    if (accessToken) {
+      const apiUrl = process.env.NEXT_PUBLIC_API + "/likes/delete/" + findId;
+      const config = {
+        headers: {
+          Authorization: "Bearer " + accessToken,
+        },
+      };
+
+      setIsSubmitting(true);
+
+      await axios
+        .delete(apiUrl, config)
+        .then((response) => {
+          setIsSubmitting(false);
+          setLiked(false);
+        })
+        .catch((error) => {
+          setIsSubmitting(false);
+          alert("Oops, something went wrong");
+        });
+    }
+  };
 
   function createGoogleMapsLink(longitude: number, latitude: number) {
     return `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
   }
 
+  useEffect(() => {
+    fetchFindDetails(params.id);
+  }, [params.id]);
+
   return (
     <>
-      {findDetails && (
+      {notFound && (
+        <div className="d-flex flex-row justify-content-center">
+          <div className="text-center my-5">
+            <BsQuestionSquare style={{ fontSize: "3rem", margin: "2rem 0" }} />
+            <p className="px-3">
+              Sorry, what you are looking for does not exist...
+            </p>
+          </div>
+        </div>
+      )}
+      {find && (
         <>
           <div className={styles["heading-container"]}>
-            <h1 className={styles["title"]}>{findDetails.title}</h1>
+            <h1 className={styles["title"]}>{find.title}</h1>
             <div className={styles["display-name-container"]}>
               <Link
                 style={{ textDecoration: "none" }}
-                href={"/user/" + findDetails.displayName}
+                href={"/user/" + find.user.displayName}
               >
-                {findDetails.displayName}
+                {find.user.displayName}
               </Link>
             </div>
             <div className={styles["date-container"]}>
-              {new Date(findDetails.dateCreated).toLocaleDateString(
+              {new Date(find.dateCreated).toLocaleDateString(
                 "en-US",
                 dateOptions,
               )}
             </div>
+            <div style={{ height: "3rem" }}>
+              {isSubmitting && (
+                <div
+                  className="spinner-grow spinner-grow-sm text-danger mt-2"
+                  role="status"
+                >
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+              )}
+              {liked && !isSubmitting && (
+                <AiFillHeart
+                  className="fs-2 mt-2"
+                  role="button"
+                  style={{ color: "red" }}
+                  onClick={() => UnLike(find.findId)}
+                />
+              )}
+              {!liked && !isSubmitting && (
+                <AiOutlineHeart
+                  className="fs-2 mt-2"
+                  role="button"
+                  onClick={() => Like(find.findId)}
+                />
+              )}
+            </div>
           </div>
-
           <div className={styles["image-container"]}>
             <img
               className={styles["image"]}
-              src={findDetails.imageUrl}
+              src={find.image.url}
               alt="Find image"
             />
           </div>
           <div className={styles["body-container"]}>
             <p>
               <b>Longitude: </b>
-              {findDetails.longitude}
+              {find.longitude}
             </p>
             <p>
               <b>Latitude: </b>
-              {findDetails.latitude}
+              {find.latitude}
             </p>
             <p>
               <b>Google Maps Link</b>{" "}
-              <Link
-                href={createGoogleMapsLink(
-                  findDetails.longitude,
-                  findDetails.latitude,
-                )}
-              >
+              <Link href={createGoogleMapsLink(find.longitude, find.latitude)}>
                 <BiLinkExternal />
               </Link>
             </p>
             <br />
             <h4>Description</h4>
-            <p>{findDetails.description}</p>
+            <p>{find.description}</p>
           </div>
         </>
       )}
