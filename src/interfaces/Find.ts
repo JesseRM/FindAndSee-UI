@@ -1,12 +1,14 @@
 import { UUID } from "crypto";
+import Image from "./Image";
+import User from "./User";
 
-export default interface FindDetails {
+export default interface Find {
   findId: UUID;
   title: string;
-  displayName: string;
   dateCreated: string;
-  imageUrl: string;
   longitude: number;
   latitude: number;
   description: string;
+  image: Image;
+  user: User;
 }
