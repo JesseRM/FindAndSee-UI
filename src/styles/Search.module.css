@@ -1,0 +1,8 @@
+.finds-container {
+  display: flex;
+  gap: var(--gap, 1.3rem);
+  flex-direction: column;
+  margin: 1.5rem 0;
+  justify-content: center;
+  align-items: center;
+}
