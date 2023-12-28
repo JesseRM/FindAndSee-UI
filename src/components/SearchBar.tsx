@@ -2,22 +2,22 @@ import { useEffect, useState, KeyboardEvent } from "react";
 import { IoSearch } from "react-icons/io5";
 import styles from "../styles/SearchBar.module.css";
 
-// interface SearchBarProps {
-//   searchHandler: (s: string) => void;
-// }
+interface SearchBarProps {
+  searchHandler: (s: string) => void;
+}
 
-const SearchBar = () => {
+const SearchBar = ({ searchHandler }: SearchBarProps) => {
   const [term, setTerm] = useState("");
 
   function handleclick() {
-    // searchHandler(term);
+    searchHandler(term);
   }
 
   function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
     const ENTER_KEY: string = "Enter";
 
     if (event.key === ENTER_KEY) {
-      // searchHandler(term);
+      searchHandler(term);
     }
   }
 

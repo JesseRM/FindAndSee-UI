@@ -6,8 +6,10 @@ import Find from "@/components/Find";
 import { useEffect, useState } from "react";
 import FindBasic from "@/interfaces/FindBasic";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
   const [recentFinds, setRecentFinds] = useState<FindBasic[]>([]);
   const getRecentFindsUrl = process.env.NEXT_PUBLIC_API + "/finds/recent";
 
@@ -29,6 +31,13 @@ export default function Home() {
       });
   }
 
+  function searchHandler(term: string) {
+    if (!term || term.trim().length === 0) return;
+
+    const url = "/find/search/" + term;
+    router.push(url);
+  }
+
   return (
     <main>
       <div className={styles["welcome-container"]}>
@@ -40,7 +49,7 @@ export default function Home() {
         <hr />
       </div>
       <div>
-        <SearchBar />
+        <SearchBar searchHandler={searchHandler} />
         <h2 className="my-5 px-5">Recent finds</h2>
         <div className={styles["finds-container"]}>
           {recentFinds.length > 0 &&
