@@ -1,8 +1,23 @@
 "use client";
 
 import styles from "../styles/NavBar.module.css";
+import {
+  AuthenticatedTemplate,
+  UnauthenticatedTemplate,
+  useMsal,
+} from "@azure/msal-react";
+import { loginRequest } from "authConfig";
 
 const NavBar = () => {
+  const { instance, accounts } = useMsal();
+  const handleLoginRedirect = () => {
+    instance.loginRedirect(loginRequest).catch((error) => console.log(error));
+  };
+
+  const handleLogoutRedirect = () => {
+    instance.logoutRedirect();
+  };
+
   return (
     <nav
       className={`${styles["navbar-custom"]} navbar navbar-expand-lg navbar-dark`}
@@ -44,9 +59,24 @@ const NavBar = () => {
               </a>
             </li>
             <li className="nav-item">
-              <button type="button" className="btn btn-primary">
-                Login
-              </button>
+              <AuthenticatedTemplate>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={handleLogoutRedirect}
+                >
+                  Logout
+                </button>
+              </AuthenticatedTemplate>
+              <UnauthenticatedTemplate>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={handleLoginRedirect}
+                >
+                  Login
+                </button>
+              </UnauthenticatedTemplate>
             </li>
           </ul>
         </div>
