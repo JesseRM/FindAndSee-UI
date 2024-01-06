@@ -63,7 +63,7 @@ const SubmitFind = () => {
               {...register("title", {
                 required: "Title is required",
                 maxLength: {
-                  value: 10,
+                  value: 100,
                   message: "Title cannot be more than 100 characters",
                 },
               })}
