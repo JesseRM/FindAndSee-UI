@@ -210,7 +210,11 @@ const FindDetails = ({ params }: { params: { id: string } }) => {
             </p>
             <p>
               <b>Google Maps Link</b>{" "}
-              <Link href={createGoogleMapsLink(find.longitude, find.latitude)}>
+              <Link
+                href={createGoogleMapsLink(find.longitude, find.latitude)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <BiLinkExternal />
               </Link>
             </p>
