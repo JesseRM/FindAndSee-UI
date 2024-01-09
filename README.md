@@ -1,34 +1,32 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Find and See
 
-## Getting Started
+Web application that allows a user upload photos along with coordinates to share with others.
+These submissions are known as 'finds', which are just interesting things a user wants to share.
+A user can create an account which allows them to submit as well as like finds.
 
-First, run the development server:
+The front-end was developed using the Next.js framework. Uer sign-up and authentication is handled
+using Microsoft Azure AD B2C.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+The back-end was developed using the Microsoft .NET framework. The code can be found [here](https://github.com/JesseRM/FindAndSee).
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Usage
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+A user can browse finds without creating an account. If a user wants to submit or like a find an account will
+need to be created. To submit a new find simply click on the 'submit' button in the navbar and fill out the form.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Technologies (Front-end)
 
-## Learn More
+1. Next.js
+2. TypeScript
+3. Bootstrap
+4. CSS
+5. Axios
 
-To learn more about Next.js, take a look at the following resources:
+## Technologies (Back-end)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+1. .NET 7
+2. C#
+3. Azure AD B2C
+4. PostgreSQL
+5. Dapper
+6. Docker
