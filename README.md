@@ -14,6 +14,8 @@ The back-end was developed using the Microsoft .NET framework. The code can be f
 A user can browse finds without creating an account. If a user wants to submit or like a find an account will
 need to be created. To submit a new find simply click on the 'submit' button in the navbar and fill out the form.
 
+Live web application can be accessed [HERE](https://findandsee-ui.onrender.com/).
+
 ## Technologies (Front-end)
 
 1. Next.js
