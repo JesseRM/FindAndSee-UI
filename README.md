@@ -9,6 +9,10 @@ using Microsoft Azure AD B2C.
 
 The back-end was developed using the Microsoft .NET framework. The code can be found [here](https://github.com/JesseRM/FindAndSee).
 
+<img src="https://raw.githubusercontent.com/JesseRM/FindAndSee-UI/master/screenshot/findandsee1.jpg" width="600">
+
+<img scr="https://raw.githubusercontent.com/JesseRM/FindAndSee-UI/master/screenshot/findandsee2.jpg" width="600">
+
 ## Usage
 
 A user can browse finds without creating an account. If a user wants to submit or like a find an account will
