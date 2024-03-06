@@ -11,7 +11,7 @@ The back-end was developed using the Microsoft .NET framework. The code can be f
 
 <img src="https://raw.githubusercontent.com/JesseRM/FindAndSee-UI/master/screenshot/findandsee1.jpg" width="600">
 
-<img scr="https://raw.githubusercontent.com/JesseRM/FindAndSee-UI/master/screenshot/findandsee2.jpg" width="600">
+<img src="https://raw.githubusercontent.com/JesseRM/FindAndSee-UI/master/screenshot/findandsee2.jpg" width="600">
 
 ## Usage
 
