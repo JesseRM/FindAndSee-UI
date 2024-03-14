@@ -45,9 +45,9 @@ const EditFind = ({ params }: { params: { id: string } }) => {
       formData.append("authorObjectId", accounts[0].idTokenClaims?.oid as any);
       formData.append("findId", params.id);
 
-      await axios.put(url, formData, config);
-
-      alert("Successfully edited");
+      axios.put(url, formData, config).then(() => {
+        alert("Successfully edited");
+      });
 
       reset(undefined, { keepValues: true });
     } catch (error) {
