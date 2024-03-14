@@ -12,8 +12,10 @@ import { loginRequest } from "authConfig";
 import getAccessToken from "util/token";
 import Find from "@/interfaces/Find";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const EditFind = ({ params }: { params: { id: string } }) => {
+  const router = useRouter();
   const { instance, accounts } = useMsal();
   const [find, setFind] = useState<Find | null>(null);
   const [notFound, setNotFound] = useState(false);
@@ -27,7 +29,6 @@ const EditFind = ({ params }: { params: { id: string } }) => {
   const onSubmit = async (data: FieldValues) => {
     try {
       const accessToken = await getAccessToken(instance, accounts[0]);
-      accounts[0].idTokenClaims?.oid;
 
       const url = process.env.NEXT_PUBLIC_API + "/finds";
       const config = {
@@ -55,6 +56,27 @@ const EditFind = ({ params }: { params: { id: string } }) => {
       reset();
     }
   };
+
+  async function handleDelete() {
+    try {
+      const accessToken = await getAccessToken(instance, accounts[0]);
+
+      const apiUrl =
+        process.env.NEXT_PUBLIC_API + "/finds/delete/id/" + params.id;
+      const config = {
+        headers: {
+          Authorization: "Bearer " + accessToken,
+        },
+      };
+
+      axios.delete(apiUrl, config).then(() => {
+        alert("Find deleted");
+        router.push("/myfinds");
+      });
+    } catch (error) {
+      alert("Something went wrong, please try again later");
+    }
+  }
 
   function handleLoginRedirect() {
     instance.loginRedirect(loginRequest).catch((error) => console.log(error));
@@ -91,6 +113,11 @@ const EditFind = ({ params }: { params: { id: string } }) => {
       <AuthenticatedTemplate>
         {find && (
           <>
+            <div className={styles["delete-btn-container"]}>
+              <button type="button" className="btn btn-danger">
+                Delete Find
+              </button>
+            </div>
             <div className={styles["image-container"]}>
               <img
                 className={styles["image"]}
