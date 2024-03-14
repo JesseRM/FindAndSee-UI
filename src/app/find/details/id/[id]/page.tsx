@@ -10,8 +10,11 @@ import { useEffect, useState } from "react";
 import Find from "@/interfaces/Find";
 import getAccessToken from "util/token";
 import { useMsal } from "@azure/msal-react";
+import { MdEdit } from "react-icons/md";
+import { useRouter } from "next/navigation";
 
 const FindDetails = ({ params }: { params: { id: string } }) => {
+  const router = useRouter();
   const { instance, accounts } = useMsal();
   const [find, setFind] = useState<Find | null>(null);
   const [liked, setLiked] = useState(false);
@@ -128,6 +131,12 @@ const FindDetails = ({ params }: { params: { id: string } }) => {
     }
   };
 
+  const handleEditClick = () => {
+    const url = "/find/edit/id/" + params.id;
+
+    router.push(url);
+  };
+
   function createGoogleMapsLink(longitude: number, latitude: number) {
     return `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
   }
@@ -190,6 +199,11 @@ const FindDetails = ({ params }: { params: { id: string } }) => {
                   onClick={() => Like(find.findId)}
                 />
               )}
+              <MdEdit
+                className="fs-3 mt-1 ms-2"
+                role="button"
+                onClick={() => handleEditClick()}
+              />
             </div>
           </div>
           <div className={styles["image-container"]}>
