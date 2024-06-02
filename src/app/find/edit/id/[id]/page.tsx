@@ -58,23 +58,27 @@ const EditFind = ({ params }: { params: { id: string } }) => {
   };
 
   async function handleDelete() {
-    try {
-      const accessToken = await getAccessToken(instance, accounts[0]);
+    const deleteFind = confirm("Delete this find?");
 
-      const apiUrl =
-        process.env.NEXT_PUBLIC_API + "/finds/delete/id/" + params.id;
-      const config = {
-        headers: {
-          Authorization: "Bearer " + accessToken,
-        },
-      };
+    if (deleteFind) {
+      try {
+        const accessToken = await getAccessToken(instance, accounts[0]);
 
-      axios.delete(apiUrl, config).then(() => {
-        alert("Find deleted");
-        router.push("/myfinds");
-      });
-    } catch (error) {
-      alert("Something went wrong, please try again later");
+        const apiUrl =
+          process.env.NEXT_PUBLIC_API + "/finds/delete/id/" + params.id;
+        const config = {
+          headers: {
+            Authorization: "Bearer " + accessToken,
+          },
+        };
+
+        axios.delete(apiUrl, config).then(() => {
+          alert("Find deleted");
+          router.push("/myfinds");
+        });
+      } catch (error) {
+        alert("Something went wrong, please try again later");
+      }
     }
   }
 
@@ -114,7 +118,11 @@ const EditFind = ({ params }: { params: { id: string } }) => {
         {find && (
           <>
             <div className={styles["delete-btn-container"]}>
-              <button type="button" className="btn btn-danger">
+              <button
+                type="button"
+                className="btn btn-danger"
+                onClick={handleDelete}
+              >
                 Delete Find
               </button>
             </div>
