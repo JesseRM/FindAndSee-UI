@@ -45,9 +45,20 @@ const EditFind = ({ params }: { params: { id: string } }) => {
       formData.append("authorObjectId", accounts[0].idTokenClaims?.oid as any);
       formData.append("findId", params.id);
 
-      axios.put(url, formData, config).then(() => {
-        alert("Successfully edited");
-      });
+      axios
+        .put(url, formData, config)
+        .then(() => {
+          alert("Successfully edited");
+        })
+        .catch((error) => {
+          if (error.response.status === 404) {
+            alert("The find you are trying to edit does not exist");
+          } else if (error.response.status === 403) {
+            alert("You are not authorized to edit this find");
+          } else {
+            alert("There was a problem updating the find");
+          }
+        });
 
       reset(undefined, { keepValues: true });
     } catch (error) {
@@ -72,10 +83,21 @@ const EditFind = ({ params }: { params: { id: string } }) => {
           },
         };
 
-        axios.delete(apiUrl, config).then(() => {
-          alert("Find deleted");
-          router.push("/myfinds");
-        });
+        axios
+          .delete(apiUrl, config)
+          .then(() => {
+            alert("Find deleted");
+            router.push("/myfinds");
+          })
+          .catch((error) => {
+            if (error.response.status === 404) {
+              alert("The find you are trying to delete does not exist");
+            } else if (error.response.status === 403) {
+              alert("You are not authorized to edit this find");
+            } else {
+              alert("There was a problem deleting the find");
+            }
+          });
       } catch (error) {
         alert("Something went wrong, please try again later");
       }
