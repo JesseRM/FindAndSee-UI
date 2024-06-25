@@ -58,17 +58,30 @@ const NavBar = () => {
                 My Finds
               </a>
             </li>
-            <li className="nav-item">
-              <AuthenticatedTemplate>
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={handleLogoutRedirect}
+            <AuthenticatedTemplate>
+              <li className="nav-item dropdown">
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
                 >
-                  Logout
-                </button>
-              </AuthenticatedTemplate>
-              <UnauthenticatedTemplate>
+                  {accounts[0] ? accounts[0].idTokenClaims?.name : ""}
+                </a>
+                <ul className="dropdown-menu dropdown-menu-end">
+                  <li
+                    className="dropdown-item"
+                    role="button"
+                    onClick={handleLogoutRedirect}
+                  >
+                    Logout
+                  </li>
+                </ul>
+              </li>
+            </AuthenticatedTemplate>
+            <UnauthenticatedTemplate>
+              <li className="nav-item">
                 <button
                   type="button"
                   className="btn btn-primary"
@@ -76,8 +89,8 @@ const NavBar = () => {
                 >
                   Login
                 </button>
-              </UnauthenticatedTemplate>
-            </li>
+              </li>
+            </UnauthenticatedTemplate>
           </ul>
         </div>
       </div>
