@@ -1,6 +1,7 @@
 "use client";
 
 import styles from "../styles/NavBar.module.css";
+import { FaCameraRetro } from "react-icons/fa";
 import {
   AuthenticatedTemplate,
   UnauthenticatedTemplate,
@@ -23,7 +24,11 @@ const NavBar = () => {
       className={`${styles["navbar-custom"]} navbar navbar-expand-lg navbar-dark`}
     >
       <div className="container-fluid">
-        <a className="navbar-brand" href="/">
+        <a
+          className={`${styles["freckle-face-regular"]} navbar-brand fs-4`}
+          href="/"
+        >
+          <FaCameraRetro className="me-3" />
           Find & See
         </a>
         <button
