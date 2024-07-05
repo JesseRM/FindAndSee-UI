@@ -146,7 +146,7 @@ const FindDetails = ({ params }: { params: { id: string } }) => {
   }, [params.id]);
 
   return (
-    <>
+    <main>
       {notFound && (
         <div className="d-flex flex-row justify-content-center">
           <div className="text-center my-5">
@@ -238,7 +238,7 @@ const FindDetails = ({ params }: { params: { id: string } }) => {
           </div>
         </>
       )}
-    </>
+    </main>
   );
 };
 
