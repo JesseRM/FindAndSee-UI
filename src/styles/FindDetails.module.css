@@ -2,6 +2,10 @@
   padding: 0 1.8rem;
 }
 
+.display-name-container {
+  font-weight: bold;
+}
+
 .title {
   margin: 1rem 0;
   font-size: 1.4rem;
@@ -30,6 +34,7 @@
 
 .date-container {
   font-size: 0.8rem;
+  color: #7f7f7f;
 }
 
 @media (min-width: 768px) {
