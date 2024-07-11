@@ -214,16 +214,14 @@ const FindDetails = ({ params }: { params: { id: string } }) => {
             />
           </div>
           <div className={styles["body-container"]}>
-            <p>
-              <b>Longitude: </b>
-              {find.longitude}
-            </p>
-            <p>
-              <b>Latitude: </b>
-              {find.latitude}
-            </p>
-            <p>
-              <b>Google Maps Link</b>{" "}
+            <h2 className="p-3 fs-6 bg-body-secondary fw-bold">Longitude</h2>
+            <p className="ps-4">{find.longitude}</p>
+            <h2 className="p-3 fs-6 bg-body-secondary fw-bold">Latitude</h2>
+            <p className="ps-4">{find.latitude}</p>
+            <h2 className="p-3 fs-6 bg-body-secondary fw-bold">
+              Google Maps Link
+            </h2>
+            <p className="ps-4">
               <Link
                 href={createGoogleMapsLink(find.longitude, find.latitude)}
                 target="_blank"
@@ -233,7 +231,7 @@ const FindDetails = ({ params }: { params: { id: string } }) => {
               </Link>
             </p>
             <br />
-            <h4>Description</h4>
+            <h2 className="p-3 fs-5 bg-dark-subtle">Description</h2>
             <p>{find.description}</p>
           </div>
         </>
