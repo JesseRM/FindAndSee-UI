@@ -232,7 +232,7 @@ const FindDetails = ({ params }: { params: { id: string } }) => {
             </p>
             <br />
             <h2 className="p-3 fs-5 bg-dark-subtle">Description</h2>
-            <p>{find.description}</p>
+            <p className="ps-4">{find.description}</p>
           </div>
         </>
       )}
